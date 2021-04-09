@@ -14,6 +14,9 @@ function filterProviders(team) {
   return providers
     .sort((provider) => (provider.id === "email" ? 1 : -1))
     .filter((provider) => {
+      if (process.env.DEPLOYMENT !== "hosted") {
+        return true;
+      }
       // guest sign-in is an exception as it does not have an authentication
       // provider using passport, instead it exists as a boolean option on the team
       if (provider.id === "email") {
