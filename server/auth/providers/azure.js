@@ -53,30 +53,30 @@ if (AZURE_CLIENT_ID) {
 
         // Load the users profile from the Microsoft Graph API
         // https://docs.microsoft.com/en-us/graph/api/resources/users?view=graph-rest-1.0
-        const profileResponse = await request(
-          `https://graph.microsoft.com/v1.0/me`,
-          accessToken
-        );
-        if (!profileResponse) {
-          throw new MicrosoftGraphError(
-            "Unable to load user profile from Microsoft Graph API"
-          );
-        }
+        // const profileResponse = await request(
+        //   `https://graph.microsoft.com/v1.0/me`,
+        //   accessToken
+        // );
+        // if (!profileResponse) {
+        //   throw new MicrosoftGraphError(
+        //     "Unable to load user profile from Microsoft Graph API"
+        //   );
+        // }
 
-        // Load the organization profile from the Microsoft Graph API
-        // https://docs.microsoft.com/en-us/graph/api/organization-get?view=graph-rest-1.0
-        const organizationResponse = await request(
-          `https://graph.microsoft.com/v1.0/organization`,
-          accessToken
-        );
-        if (!organizationResponse) {
-          throw new MicrosoftGraphError(
-            "Unable to load organization info from Microsoft Graph API"
-          );
-        }
+        // // Load the organization profile from the Microsoft Graph API
+        // // https://docs.microsoft.com/en-us/graph/api/organization-get?view=graph-rest-1.0
+        // const organizationResponse = await request(
+        //   `https://graph.microsoft.com/v1.0/organization`,
+        //   accessToken
+        // );
+        // if (!organizationResponse) {
+        //   throw new MicrosoftGraphError(
+        //     "Unable to load organization info from Microsoft Graph API"
+        //   );
+        // }
 
-        const organization = organizationResponse.value[0];
-        const email = profile.email || profileResponse.mail;
+        const organization = "DEFAULT";
+        const email = profile.email || profile.upn;
         if (!email) {
           throw new MicrosoftGraphError(
             "'email' property is required but could not be found in user profile."
@@ -85,7 +85,7 @@ if (AZURE_CLIENT_ID) {
 
         const domain = email.split("@")[1];
         const subdomain = domain.split(".")[0];
-        const teamName = organization.displayName;
+        const teamName = organization;
 
         const result = await accountProvisioner({
           ip: req.ip,
