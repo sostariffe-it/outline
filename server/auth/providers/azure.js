@@ -120,7 +120,7 @@ if (AZURE_CLIENT_ID) {
   strategy.name = providerName;
   passport.use(strategy);
 
-  router.get("azure", passport.authenticate(providerName));
+  router.get("azure", passport.authenticate(providerName, {}));
 
   router.get("azure.callback", passportMiddleware(providerName));
 }
