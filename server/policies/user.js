@@ -37,6 +37,12 @@ allow(User, ["activate", "suspend"], User, (actor, user) => {
   throw new AdminRequiredError();
 });
 
+allow(User, "readDetails", User, (actor, user) => {
+  if (!user || user.teamId !== actor.teamId) return false;
+  if (user === actor) return true;
+  return actor.isAdmin;
+});
+
 allow(User, "promote", User, (actor, user) => {
   if (!user || user.teamId !== actor.teamId) return false;
   if (user.isAdmin || user.isSuspended) return false;
@@ -46,7 +52,7 @@ allow(User, "promote", User, (actor, user) => {
 
 allow(User, "demote", User, (actor, user) => {
   if (!user || user.teamId !== actor.teamId) return false;
-  if (!user.isAdmin || user.isSuspended) return false;
+  if (user.isSuspended) return false;
   if (actor.isAdmin) return true;
   throw new AdminRequiredError();
 });

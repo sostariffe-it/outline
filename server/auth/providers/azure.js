@@ -1,8 +1,8 @@
 // @flow
 import passport from "@outlinewiki/koa-passport";
+import { Strategy as AzureStrategy } from "@outlinewiki/passport-azure-ad-oauth2";
 import jwt from "jsonwebtoken";
 import Router from "koa-router";
-import { Strategy as AzureStrategy } from "passport-azure-ad-oauth2";
 import accountProvisioner from "../../commands/accountProvisioner";
 import env from "../../env";
 import { MicrosoftGraphError } from "../../errors";
@@ -29,7 +29,7 @@ export async function request(endpoint: string, accessToken: string) {
 }
 
 export const config = {
-  name: "Microsoft 365",
+  name: "Microsoft",
   enabled: !!AZURE_CLIENT_ID,
 };
 
@@ -117,10 +117,9 @@ if (AZURE_CLIENT_ID) {
     }
   );
 
-  strategy.name = providerName;
   passport.use(strategy);
 
-  router.get("azure", passport.authenticate(providerName, {}));
+  router.get("azure", passport.authenticate(providerName));
 
   router.get("azure.callback", passportMiddleware(providerName));
 }
